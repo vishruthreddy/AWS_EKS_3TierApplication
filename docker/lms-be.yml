@@ -1,0 +1,61 @@
+- name: Clone LMS repo, build Docker image, and push to Docker Hub
+  hosts: n1
+  become: yes
+  vars_files:
+    - encoded_secrets.yml
+
+  vars:
+    repo_url: https://github.com/saitejat1907/lms
+    repo_branch: k8s
+    docker_image_name: saiteja19799/k8s_lms_be
+    dockerhub_password: "{{ dockerhub_password_b64 | b64decode }}"
+
+  tasks:
+    - name: Install required packages
+      package:
+        name:
+          - git
+          # - docker
+        state: present
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Clone LMS repo from GitHub
+      git:
+        repo: "{{ repo_url }}"
+        dest: /tmp/lms
+        version: "{{ repo_branch }}"
+        force: yes
+
+    # - name: Build Docker image
+    #   community.docker.docker_image:
+    #     name: "{{ docker_image_name }}"
+    #     source: build
+    #     build:
+    #       path: /tmp/lms/api
+    #       dockerfile: /tmp/lms/api/Dockerfile
+    #   environment:
+    #     ANSIBLE_PYTHON_INTERPRETER: "/usr/bin/python3"
+
+    # - name: Login to Docker Hub
+    #   community.docker.docker_login:
+    #     username: "{{ dockerhub_username }}"
+    #     password: "{{ dockerhub_password }}"
+
+    # - name: Push Docker image to Docker Hub
+    #   community.docker.docker_image:
+    #     name: "{{ docker_image_name }}"
+    #     push: true
+
+    - name: Build Docker image
+      command: docker build -t {{ docker_image_name }} -f /tmp/lms/api/Dockerfile /tmp/lms/api
+
+    # - name: Login to Docker Hub
+    #   command: docker login --username {{ dockerhub_username }} --password {{ dockerhub_password }}
+
+    - name: Push Docker image to Docker Hub
+      command: docker push {{ docker_image_name }}

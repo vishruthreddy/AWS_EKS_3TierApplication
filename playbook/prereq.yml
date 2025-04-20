@@ -1,0 +1,8 @@
+- name: Install Kubernetes Python module if missing
+  hosts: n1
+  become: yes
+  tasks:
+    - name: Ensure python3-kubernetes is installed via apt
+      apt:
+        name: python3-kubernetes
+        state: present

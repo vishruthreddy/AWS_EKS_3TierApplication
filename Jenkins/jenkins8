@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Create Config Maps") {
+            steps {
+                ansiblePlaybook credentialsId: 'Ansible',
+                                 disableHostKeyChecking: true,
+                                 installation: 'Ansible',
+                                 inventory: 'dev.inv',
+                                 playbook: 'playbook/config_maps.yml'
+            }
+        }
+    }
+}
+

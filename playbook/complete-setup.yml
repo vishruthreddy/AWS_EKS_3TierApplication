@@ -1,0 +1,109 @@
+- name: Create Roles and RoleBindings for LMS
+  hosts: n1
+  gather_facts: false
+  tasks:
+    - name: Create db-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: Role
+          metadata:
+            name: db-role
+            namespace: lms
+          rules:
+            - apiGroups: [""]
+              resources: ["pods", "services", "configmaps", "secrets"]
+              verbs: ["get", "list", "create", "delete"]
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["get", "list", "create", "update", "delete"]
+
+    - name: Bind db-sa to db-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: db-rolebinding
+            namespace: lms
+          subjects:
+            - kind: ServiceAccount
+              name: db-sa
+              namespace: lms
+          roleRef:
+            kind: Role
+            name: db-role
+            apiGroup: rbac.authorization.k8s.io
+
+    - name: Create app-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: Role
+          metadata:
+            name: app-role
+            namespace: lms
+          rules:
+            - apiGroups: [""]
+              resources: ["pods", "services", "configmaps", "secrets"]
+              verbs: ["get", "list", "create", "delete"]
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["get", "list", "create", "update", "delete"]
+
+
+    - name: Bind app-sa to app-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: app-rolebinding
+            namespace: lms
+          subjects:
+            - kind: ServiceAccount
+              name: app-sa
+              namespace: lms
+          roleRef:
+            kind: Role
+            name: app-role
+            apiGroup: rbac.authorization.k8s.io
+
+    - name: Create web-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: Role
+          metadata:
+            name: web-role
+            namespace: lms
+          rules:
+            - apiGroups: [""]
+              resources: ["pods", "services", "configmaps", "secrets"]
+              verbs: ["get", "list", "create", "delete"]
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["get", "list", "create", "update", "delete"]
+
+    - name: Bind web-sa to web-role
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: web-rolebinding
+            namespace: lms
+          subjects:
+            - kind: ServiceAccount
+              name: web-sa
+              namespace: lms
+          roleRef:
+            kind: Role
+            name: web-role
+            apiGroup: rbac.authorization.k8s.io
