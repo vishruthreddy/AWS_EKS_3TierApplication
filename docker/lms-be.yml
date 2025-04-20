@@ -6,7 +6,7 @@
 
   vars:
     repo_url: https://github.com/vishruthreddy/lms.git
-    repo_branch: k8s
+    repo_branch: main
     docker_image_name: vishruth/aws_eks_3tierapp
     dockerhub_password: "{{ dockerhub_password_b64 | b64decode }}"
 
