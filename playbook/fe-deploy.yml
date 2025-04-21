@@ -28,7 +28,7 @@
                     ports:
                       - containerPort: 80
                     envFrom:
-                      - ConfigmapRef:
+                      - ConfigMapRef:
                         name: frontend-config-map
 
     - name: Apply LMS Frontend Service
