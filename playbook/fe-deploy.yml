@@ -23,7 +23,7 @@
                 serviceAccountName: web-sa
                 containers:
                   - name: frontend-container
-                    image: saitejat1907/k8s-fe
+                    image: vishruth04/fe
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 80
