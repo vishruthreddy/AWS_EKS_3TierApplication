@@ -27,9 +27,9 @@
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 80
-                    env:
-                      - name: REACT_APP_BACKEND_URL
-                        value: http://lms-be-service:3000
+                    envFrom:
+                      - ConfigmapRef:
+                        name:frontend-config-map
 
     - name: Apply LMS Frontend Service
       kubernetes.core.k8s:
