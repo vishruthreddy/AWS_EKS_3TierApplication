@@ -1,1 +1,15 @@
+pipeline {
+    agent any
 
+    stages {
+        stage("Create Fe_Config Maps") {
+            steps {
+                ansiblePlaybook credentialsId: 'ubuntu1',
+                                 disableHostKeyChecking: true,
+                                 installation: 'Ansible',
+                                 inventory: 'dev.inv',
+                                 playbook: 'playbook/config_maps_FEBE.yml'
+            }
+        }
+    }
+}
