@@ -27,6 +27,9 @@
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 80
+                    env:
+                      - name: REACT_APP_BACKEND_URL
+                        value: http://lms-be-service:3000
 
     - name: Apply LMS Frontend Service
       kubernetes.core.k8s:
@@ -41,14 +44,6 @@
             type: LoadBalancer
             ports:
               - port: 80
+                targetPort: 80
             selector:
               app: lms-fe
-
-    # - name: Wait for Pods to be Ready
-    #   ansible.builtin.command: kubectl get pods
-    #   register: pod_status
-    #   changed_when: false
-
-    # - name: Display Pod Status
-    #   ansible.builtin.debug:
-    #     msg: "{{ pod_status.stdout }}"
