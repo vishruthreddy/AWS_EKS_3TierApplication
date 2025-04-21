@@ -28,8 +28,8 @@
                     ports:
                       - containerPort: 80
                     envFrom:
-                      - ConfigMapRef:
-                        name: frontend-config-map
+                      - configMapRef:
+                          name: frontend-config-map
 
     - name: Apply LMS Frontend Service
       kubernetes.core.k8s:
@@ -46,4 +46,4 @@
               - port: 80
                 targetPort: 80
             selector:
-              app: lms-fe
+              app: lms-fe 
